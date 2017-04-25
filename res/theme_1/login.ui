@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="Form" name="login" cloudDestinationProperty="login" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="4" flowLayoutValign="4" >
+  <component type="Container" name="MainContainer" cloudDestinationProperty="Container" layout="BoxLayout" boxLayoutAxis="Y" >
+    <component type="Container" name="LogoContainer" cloudDestinationProperty="LogoContainer" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="4" flowLayoutValign="0" >
+      <component type="ImageViewer" name="ImageViewer" cloudDestinationProperty="ImageViewer" >
+        <custom name="image" type="com.codename1.ui.Image" value="android-icon.png" />
+      </component>
+    </component>
+    <component type="Container" name="LabelContainer" cloudDestinationProperty="LabelContainer" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="4" flowLayoutValign="0" >
+      <component type="Label" name="Label" cloudDestinationProperty="Label" text="Linkar" verticalAlignment="4" >
+      </component>
+    </component>
+    <component type="Container" name="loginDialog" cloudDestinationProperty="loginDialog" layout="BoxLayout" boxLayoutAxis="Y" >
+      <component type="Container" name="Login" cloudDestinationProperty="Login" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="4" flowLayoutValign="4" >
+        <component type="Label" name="Label1" cloudDestinationProperty="Label1" text="Nom Utilisateur" >
+        </component>
+        <component type="TextField" name="txtUsername" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" hint="nom d'utilisateur" >
+        </component>
+      </component>
+      <component type="Container" name="Password" cloudDestinationProperty="Password" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="4" flowLayoutValign="4" >
+        <component type="Label" name="Label2" cloudDestinationProperty="Label2" text="Mot de passe    " >
+        </component>
+        <component type="TextField" name="txtPassword" cloudBoundProperty="text" cloudDestinationProperty="TextField1" text="" hint="mot de passe" >
+        </component>
+      </component>
+      <component type="Button" name="btnLogin" cloudDestinationProperty="bnLogin" text="Se Connecter" >
+      </component>
+    </component>
+  </component>
+</component>
