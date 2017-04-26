@@ -6,6 +6,7 @@
 package com.linkar.main;
 
 import com.codename1.components.ImageViewer;
+import com.codename1.db.Database;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
@@ -19,14 +20,17 @@ import com.codename1.ui.util.UIBuilder;
 import com.linkar.entities.Membre;
 import static com.linkar.main.MyApplication.LOGIN_URL;
 import com.linkar.utils.Json;
+import java.io.IOException;
 
 /**
  *
  * @author Oussama Reguez
  */
+
 public class LoginForm {
   private   Form form;
      private Membre connectedMember =null;
+   
       public void validateLogin(String login ,String password){
         ConnectionRequest con = new ConnectionRequest();
             con.setUrl(LOGIN_URL+"?username="+login+"&password="+password);
