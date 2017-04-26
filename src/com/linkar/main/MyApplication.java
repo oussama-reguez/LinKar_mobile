@@ -282,7 +282,10 @@ public class MyApplication implements PushCallback{
     
     
     }
-    
+    void showSplashScreen(){
+        SplashScreen s = new SplashScreen(theme);
+        s.getForm().show();
+    }
     void showForm(){
         Form myForm = new Form();
    Container c  = new Container();
@@ -292,7 +295,6 @@ public class MyApplication implements PushCallback{
    myForm.add(c);
     myForm.show();
     }
-
     void displayUpload(){
         Form f = new Form("df");
         Button b = new Button() ;
@@ -318,8 +320,6 @@ public class MyApplication implements PushCallback{
         LoginForm l = new LoginForm(theme);
       l.getForm().show();
     }
-   
-    
   void showVerifyCinForm(){
       VerifyCinForm f = new VerifyCinForm(theme);
       f.getForm().show();
@@ -354,7 +354,8 @@ public class MyApplication implements PushCallback{
       // f.getForm().show();
    // showVerifyCinForm();
   //  capture();
-  testDataBase();
+ // testDataBase();
+       showSplashScreen();
     }
 public void capture(){
     Toolbar.setGlobalToolbar(true);
