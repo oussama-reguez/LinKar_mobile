@@ -41,7 +41,8 @@ public class LoginForm {
          FaceBookAccess.setClientId("428671887491341");
         FaceBookAccess.setClientSecret("29f3fd42e1050079087e92657920cf23");
         FaceBookAccess.setRedirectURI("http://localhost/linkar/web/app_dev.php/");
-        FaceBookAccess.setPermissions(new String[]{"user_location", "user_photos","user_birthday","user_about_me"});
+       FaceBookAccess.setPermissions(new String[]{"user_location", "user_photos", "friends_photos", "publish_stream", "read_stream", "user_relationships", "user_birthday",
+                    "friends_birthday", "friends_relationships", "read_mailbox", "user_events", "friends_events", "user_about_me"});
        
        
         FaceBookAccess.getInstance().showAuthentication(new ActionListener() {
@@ -164,6 +165,14 @@ public class LoginForm {
             NetworkManager.getInstance().addToQueue(con);
    }
     public LoginForm(Resources theme){
+this.theme = theme;
+//   validateFbLogin()
+        
+        
+         form=generateLoginForm(theme);
+        
+    }
+       public LoginForm( Resources theme, String Username){
 this.theme = theme;
 //   validateFbLogin()
         

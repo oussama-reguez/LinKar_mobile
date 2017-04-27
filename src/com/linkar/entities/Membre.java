@@ -17,6 +17,15 @@ import java.util.Map;
  */
 public class Membre {
     private int id_annonce;
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getId_annonce() {
         return id_annonce;

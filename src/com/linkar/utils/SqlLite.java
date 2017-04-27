@@ -15,6 +15,7 @@ import java.io.IOException;
 
 
 
+
 /**
  *
  * @author Oussama Reguez
@@ -25,7 +26,23 @@ public class SqlLite {
     public static void createDb(){
         
     }
-    
+    public static void initDb(){
+         try {
+        if(Database.exists("membre")){
+          
+                Database.delete("membre");
+           
+                System.err.println("deleted");
+           
+        }
+          Database.openOrCreate("membre");
+          SqlLite.createTableMember();
+          
+         } catch (IOException ex) {
+               
+            }
+      
+    }
     public static void clearMemberTable(){
          try {
             db=Database.openOrCreate("membre");
@@ -36,21 +53,26 @@ public class SqlLite {
            
         }
     }
-    public static void getMember(int id){
+    public static Membre getMember(){
          Cursor c;
            Membre m = null;
          try {
+             if(!Database.exists("membre")){
+                 return null;
+             }
               db = Database.openOrCreate("membre");
-             c = db.executeQuery("select * from membre where id="+id);
+             c = db.executeQuery("select * from membre ");
           
              while (c.next()) {
                             Row r = c.getRow();
                             m = new Membre();
-                            m.setId_member(id);
+                            m.setId_member(r.getInteger(0));
                             m.setLast_name(r.getString(1));
                             m.setFirst_name(r.getString(2));
                             m.setPassword(r.getString(3));
                             m.setEmail(r.getString(4));
+                             m.setUsername(r.getString(5));
+                             m.setUrl_picture(r.getString(6));
                             
                           System.err.println("");
                            ;
@@ -58,6 +80,7 @@ public class SqlLite {
          } catch (IOException ex) {
             
          }
+         return m;
                        
     }
     public static void UpdateMember(Membre membre){
@@ -66,7 +89,7 @@ public class SqlLite {
           db.execute(" update membre set "
                                 + " last_name='"
                                 +membre.getLast_name()+"',first_name='"
-                                +membre.getFirst_name()+"',password='"+membre.getPassword()+"',email='"+membre.getEmail()+"' where id="+membre.getId_member());
+                                +membre.getFirst_name()+"',password='"+membre.getPassword()+"',email='"+membre.getEmail()+"',username='"+membre.getUsername()+"',url_picture='"+membre.getUrl_picture()+"' where id="+membre.getId_member());
             
         } catch (IOException ex) {
            
@@ -83,7 +106,9 @@ public class SqlLite {
 "  `last_name` varchar(50) DEFAULT NULL,\n" +
 "  `first_name` varchar(50) DEFAULT NULL,\n" +
 "  `password` varchar(255) DEFAULT NULL,\n" +
-"  `email` varchar(180) DEFAULT NULL\n" +
+"  `email` varchar(180) DEFAULT NULL ,\n" +
+"  `username` varchar(180) DEFAULT NULL ,\n" +
+"  `url_picture` varchar(180) DEFAULT NULL \n" +
 "  );");
             
             
@@ -97,12 +122,12 @@ public class SqlLite {
           db.execute("insert into membre "
                                 + " values ("+membre.getId_member()+",'"
                                 +membre.getLast_name()+"','"
-                                +membre.getFirst_name()+"','"+membre.getPassword()+"','"+membre.getEmail()+"')");
+                                +membre.getFirst_name()+"','"+membre.getPassword()+"','"+membre.getEmail()+"','"+membre.getUsername()+"','"+membre.getUrl_picture()+"')");
             
-            System.err.println("");
+           
         
         } catch (IOException ex) {
-            System.err.println("");  
+         System.out.println(ex.getMessage());
         }
     }
    // public static void loggOutMember(Member)
