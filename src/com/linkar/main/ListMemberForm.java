@@ -43,9 +43,9 @@ import java.util.List;
  *
  * @author shai
  */
-public class InboxForm extends Form {
+public class ListMemberForm extends Form {
 
-    public InboxForm() {
+    public ListMemberForm() {
         this(com.codename1.ui.util.Resources.getGlobalResources());
     }
 
@@ -56,7 +56,7 @@ public class InboxForm extends Form {
     
     
     
-    public InboxForm(com.codename1.ui.util.Resources resourceObjectInstance) {
+    public ListMemberForm(com.codename1.ui.util.Resources resourceObjectInstance) {
         initGuiBuilderComponents(resourceObjectInstance);
         
         getToolbar().setTitleComponent(
@@ -148,10 +148,10 @@ public class InboxForm extends Form {
             popup.setTransitionInAnimator(CommonTransitions.createEmpty());
             popup.setTransitionOutAnimator(CommonTransitions.createEmpty());
             popup.setDisposeWhenPointerOutOfBounds(true);
-            int t = InboxForm.this.getTintColor();
-            InboxForm.this.setTintColor(0);
-            popup.showPopupDialog(new Rectangle(InboxForm.this.getWidth() - 10, InboxForm.this.getHeight() - 10, 10, 10));
-            InboxForm.this.setTintColor(t);
+            int t = ListMemberForm.this.getTintColor();
+            ListMemberForm.this.setTintColor(0);
+            popup.showPopupDialog(new Rectangle(ListMemberForm.this.getWidth() - 10, ListMemberForm.this.getHeight() - 10, 10, 10));
+            ListMemberForm.this.setTintColor(t);
             fab.setUIID("FloatingActionButton");
             fab.setIcon(oldImage);
         });

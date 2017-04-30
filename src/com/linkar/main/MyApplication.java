@@ -287,7 +287,7 @@ public class MyApplication implements LocalNotificationCallback {
     }
     void showSplashScreen(){
         SplashScreen s = new SplashScreen(theme);
-        s.getForm().show();
+      //  s.getForm().show();
     }
     void showForm(){
         Form myForm = new Form();
@@ -361,12 +361,13 @@ public class MyApplication implements LocalNotificationCallback {
  // testDataBase();
       // showSplashScreen();
      // new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
-  //   new SignUpForm2(theme).show();
- // new TestClass(theme).show();
+   //  new SignUpForm(theme).show();
+//new ProfilForm(theme).show();
  //new AccountSettingForm(theme).show();
 // new DiscussionForm(UIManager.initFirstTheme("/message")).showSbaitso();
-//new InboxForm(UIManager.initFirstTheme("/theme_pheonix")).show();
-new SendMessageForm(theme).show();
+//new ListMemberForm(UIManager.initFirstTheme("/theme_pheonix")).show();
+//new SendMessageForm(theme).show();
+new SplashScreen(theme).show();
     }
 public void capture(){
     

@@ -20,6 +20,15 @@ public class Membre {
     private String username;
     private Date lastDate;
     private String lastMessage;
+   private String facebookId;
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
 
     public String getUsername() {
         return username;

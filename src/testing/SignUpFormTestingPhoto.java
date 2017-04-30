@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.linkar.main;
+package testing;
 
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
@@ -20,12 +20,12 @@ import com.codename1.ui.util.Resources;
  *
  * @author Oussama Reguez
  */
-public class SignUpForm2 extends Form{
+public class SignUpFormTestingPhoto extends Form{
     boolean male = true;
      private Container north  = new Container(new FlowLayout(CENTER));
       private Container center  = new Container(new FlowLayout(CENTER));
        private Container south  = new Container(new FlowLayout(CENTER));
-    public SignUpForm2(Resources theme){
+    public SignUpFormTestingPhoto(Resources theme){
         setUIID("signUpForm");
          setLayout(new BorderLayout());
      

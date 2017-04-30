@@ -1,4 +1,4 @@
-package com.linkar.main;
+package testing;
 
 
 import com.codename1.notifications.LocalNotification;

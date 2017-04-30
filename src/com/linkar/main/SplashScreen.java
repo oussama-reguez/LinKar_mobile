@@ -42,8 +42,8 @@ import java.io.IOException;
  * @author Oussama Reguez
  */
 
-public class SplashScreen {
-    Form f ;
+public class SplashScreen extends Form {
+  
      public static String TOKEN;
      public static final String VERIFY_PASSWORD_URL="http://localhost/linkar_web/web/app_dev.php/rest/verifyPassword";
      boolean  verifyPassword=false;
@@ -68,23 +68,26 @@ public class SplashScreen {
         return verifyPassword;
     }
      
-     public static boolean isTokenExist() {
+     public static boolean isTokenExist()
+     {
         return Storage.getInstance().readObject("token") == null;
     }
+     
     public SplashScreen(Resources theme){
-        f = new Form();
+     
         Label l = new Label("linkar");
         Button b = new Button("start");
         b.addActionListener((evt) -> {
-           // handleLoginProcess();
-           // test2();
-           test3();
+              test2();
+            handleLoginProcess();
+        
+          // test3();
         });
         Container c = new Container();
         c.add(l);
         c.add(b);
-        f.add(c);
-        f.show();
+        add(c);
+       
               
     }
     boolean expired = false;
@@ -107,8 +110,9 @@ public class SplashScreen {
     }
     public Membre handeFacebookLogin(){
         Membre m  = null;
-        TOKEN = (String) Storage.getInstance().readObject("token");
-        if(TOKEN!= null){        
+       
+        if(isTokenExist()){        
+             TOKEN = (String) Storage.getInstance().readObject("token");
             FaceBookAccess.setToken(TOKEN);
             //in case token has expired re-authenticate
             FaceBookAccess.getInstance().addResponseCodeListener(new ActionListener() {
@@ -133,6 +137,7 @@ public class SplashScreen {
             System.err.println("");  
        User  me =    FaceBookAccess.getInstance().getUser(null);
        //convert it to Member object 
+                    System.err.println("");
                  m=userToMembre(me);
                  return m;
         } catch (IOException ex) {
@@ -146,7 +151,8 @@ public class SplashScreen {
     
     public Membre userToMembre(User f){
         Membre m = new Membre();
-        m.setId_member(Integer.parseInt(f.getId()));
+        
+       m.setFacebookId(f.getId());
         m.setFirst_name(f.getFirst_name());
         m.setLast_name(f.getLast_name());
         m.setEmail(f.getEmail());
@@ -158,11 +164,12 @@ public class SplashScreen {
          connectedMember.setFirst_name("sou");
          connectedMember.setLast_name("regez");
          connectedMember.setEmail("oussamareguez@gmail.com");
-         connectedMember.setPassword("sdsdfs");
+         connectedMember.setPassword("oussamaa");
          connectedMember.setUsername("oussama");
          connectedMember.setUrl_picture("ddd");
      }
     public void test2(){
+        /*
 initMember();
         SqlLite.initDb();
 
@@ -170,10 +177,14 @@ SqlLite.insertMember(connectedMember);
   // Membre m= SqlLite.getMember();
  Membre m =SqlLite.getMember();
         System.err.println("");
+*/
+         initMember();
+        SqlLite.UpdateMember(connectedMember);
+    
     }
     public void handleLoginProcess(){
         //check is a user exist in sqlite
-        if(!Database.exists("membre")){
+        if(Database.exists("membre")){
             
             connectedMember=handeFacebookLogin();
             if(connectedMember==null){
@@ -181,52 +192,29 @@ SqlLite.insertMember(connectedMember);
                 //check sql lite 
                 //verify local password 
               connectedMember=SqlLite.getMember();
+                System.err.println("");
               if(!verifyPassword(connectedMember)){
                   //signin form
+                    System.err.println("");
               }
               else{
                   // show main app
+                    System.err.println("");
               }
                 
             }else{
 //user is logged in with facebook                 
 //show main app
+  System.err.println("");
             }
         }
         else{
-             //show main app
+             //sign up form  with walkthrough
+               System.err.println("");
         }
-//test();
-//  handeFacebookLogin();
-        /*
-            if(Database.exists("membre")){
- //verify if user has a token for facebook 
-    if (isTokenExist()) {
-              //check if token has expired and get user fb object 
-                //token exists no need to authenticate
-            
-              //convert fb object to member object 
-              
-              //update member object in database 
-              
-              //update member object  in sqlLite 
-              
-          }
-            
-//verify if password match in data base !
-            
-            
-           
-            
-        }
-        
-          
-        
-   */
+
     }
-    public Form getForm(){
-return f;
-}
+
     
  public void test3(){
      LocalNotification n = new LocalNotification();

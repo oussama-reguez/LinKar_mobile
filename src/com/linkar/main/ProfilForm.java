@@ -23,8 +23,8 @@ import com.codename1.ui.util.Resources;
  *
  * @author Oussama Reguez
  */
-public class TestClass extends Form {
-    public TestClass(Resources theme){
+public class ProfilForm extends Form {
+    public ProfilForm(Resources theme){
         /*
        Label l = new Label("check");
         Container ll=FlowLayout.encloseRight(l);

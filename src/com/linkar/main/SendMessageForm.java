@@ -114,7 +114,6 @@ lbl.setUIID("Label");
             ConnectionRequest r = new ConnectionRequest();
             r.setPost(false);
             r.setUrl(AUTO_COMPLETE_URL);
-           
             r.addArgument("name", text);
             NetworkManager.getInstance().addToQueueAndWait(r);
             String response = new String (r.getResponseData());
