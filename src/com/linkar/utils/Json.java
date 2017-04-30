@@ -6,6 +6,9 @@
 package com.linkar.utils;
 
 import com.codename1.io.JSONParser;
+import com.codename1.l10n.DateFormat;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.linkar.entities.Membre;
 import com.linkar.entities.Message;
 import com.linkar.entities.Notification;
@@ -16,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +85,7 @@ public class Json {
     
 }
         
-        public static List<Membre> jsonToListMembers(String jsonData){
+         public static List<Membre> jsonToListMembers(String jsonData){
              List<Membre> membres = new ArrayList<>();
             InputStream is = new ByteArrayInputStream(  jsonData.getBytes());
         Reader r = new InputStreamReader(is);
@@ -94,12 +98,10 @@ public class Json {
             for (Object object : data2) {
             // LinkedHashMap<String,Object>  row =  (LinkedHashMap<String,Object>) object;
               LinkedHashMap<String,Object> te=( LinkedHashMap<String,Object>)object;
-             Membre m= new Membre();
-            int id = ((Double) te.get("id")).intValue();
-           m.setId_member(id);
-             m.setFirst_name((String) te.get("firstName"));     
-             m.setLast_name((String) te.get("lastName"));    
-              m.setUrl_picture((String) te.get("urlPicture"));
+            Membre m = listToMember(te);
+             
+      
+   
               membres.add(m);
           
             }
@@ -113,6 +115,44 @@ public class Json {
         return membres;
         }
         
+        public static Membre listToMember(LinkedHashMap<String,Object> list){
+            Membre m = new Membre();
+              int idSender = ((Double) list.get("id")).intValue();
+                    m.setId_member(idSender);
+                    m.setFirst_name((String) list.get("firstName"));
+                    m.setLast_name((String) list.get("lastName"));
+                    m.setUrl_picture((String) list.get("urlPicture"));
+                   m.setEmail((String) list.get("email"));
+                   m.setPassword((String) list.get("password"));
+                    LinkedHashMap<String,Object>  dateData= (LinkedHashMap<String,Object> ) list.get("lastDate");
+            LinkedHashMap<String,Object>  birthDayData= (LinkedHashMap<String,Object> ) list.get("lastDate");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    Date startDate;
+   if(dateData!=null){
+                try {
+                    String date=(String)dateData.get("date");
+                    startDate = df.parse(date);
+                   m.setLastDate(startDate);
+       
+                } catch (ParseException ex) {
+                    
+                }
+   }
+    if(birthDayData!=null){
+                try {
+                    String date=(String)dateData.get("birthDay");
+                    startDate = df.parse(date);
+                   m.setBirth(startDate);
+       
+                } catch (ParseException ex) {
+                    
+                }
+   }
+   if(list.get("lastMessage")!=null){
+        m.setLastMessage((String) list.get("lastMessage"));  
+   }
+            return m;
+        }
         public static List<Message> jsonToListMessages(String jsonData){
              List<Message> messages = new ArrayList<>();
             InputStream is = new ByteArrayInputStream(  jsonData.getBytes());
@@ -133,26 +173,15 @@ public class Json {
             // m.setFirst_name((String) te.get("firstName"));     
              m.setText((String) te.get("text"));
              LinkedHashMap<String,Object>  senderData= (LinkedHashMap<String,Object> ) te.get("sender");
-             Membre sender = new Membre();
+             Membre sender = listToMember(senderData);
             
                
-                     int idSender = ((Double) senderData.get("id")).intValue();
-                    sender.setId_member(idSender);
-                    sender.setFirst_name((String) senderData.get("firstName"));
-                    sender.setLast_name((String) senderData.get("lastName"));
-                    sender.setUrl_picture((String) senderData.get("urlPicture"));
-             
               
                LinkedHashMap<String,Object> receiverData= ( LinkedHashMap<String,Object>) te.get("receiver");
-             Membre receiver = new Membre();
+             Membre receiver = listToMember(receiverData);
              
               
-                     int idReceiver = ((Double) receiverData.get("id")).intValue();
-                    receiver.setId_member(idReceiver);
-                    receiver.setFirst_name((String) receiverData.get("firstName"));
-                    receiver.setLast_name((String) receiverData.get("lastName"));
-                    receiver.setUrl_picture((String) receiverData.get("urlPicture"));
-              
+                   
 
                 m.setSender(sender);
                 m.setReceiver(receiver);
@@ -169,8 +198,7 @@ public class Json {
             
             
         return messages;
-        }
-        
+        }        
         public static List<Notification> jsonToListNotifications(String jsonData){
                List<Notification> notifications = new ArrayList<>();
             InputStream is = new ByteArrayInputStream(  jsonData.getBytes());
@@ -190,23 +218,12 @@ public class Json {
               Membre sender = new Membre();
              LinkedHashMap<String,Object>  senderData= (LinkedHashMap<String,Object> ) te.get("sender");
            
-               
-                     int idSender = ((Double) senderData.get("id")).intValue();
-                    sender.setId_member(idSender);
-                    sender.setFirst_name((String) senderData.get("firstName"));
-                    sender.setLast_name((String) senderData.get("lastName"));
-                    sender.setUrl_picture((String) senderData.get("urlPicture"));
+               sender=listToMember(senderData);
              
               
                LinkedHashMap<String,Object> receiverData= ( LinkedHashMap<String,Object>) te.get("member");
-             Membre receiver = new Membre();
-             
-              
-                     int idReceiver = ((Double) receiverData.get("id")).intValue();
-                    receiver.setId_member(idReceiver);
-                    receiver.setFirst_name((String) receiverData.get("firstName"));
-                    receiver.setLast_name((String) receiverData.get("lastName"));
-                    receiver.setUrl_picture((String) receiverData.get("urlPicture"));
+                        
+              Membre receiver =listToMember(receiverData);
               
 
                 notification.setSender(sender);

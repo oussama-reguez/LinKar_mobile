@@ -18,6 +18,8 @@ import java.util.Map;
 public class Membre {
     private int id_annonce;
     private String username;
+    private Date lastDate;
+    private String lastMessage;
 
     public String getUsername() {
         return username;
@@ -34,7 +36,15 @@ public class Membre {
     public void setId_annonce(int id_annonce) {
         this.id_annonce = id_annonce;
     }
-    
+    private Date createdTime;
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
     private int id_member;
     private String last_name;
     private String first_name;
@@ -44,6 +54,22 @@ public class Membre {
     private double  phone_number;
     private String gender;
     private boolean statut;
+
+    public Date getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(Date lastDate) {
+        this.lastDate = lastDate;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
 
    
     private boolean verif_number;

@@ -14,6 +14,7 @@ import com.codename1.io.Util;
 import com.codename1.notifications.LocalNotification;
 import com.codename1.notifications.LocalNotificationCallback;
 import com.codename1.push.PushCallback;
+import com.codename1.ui.AutoCompleteTextField;
 import com.codename1.ui.Button;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
@@ -362,9 +363,13 @@ public class MyApplication implements LocalNotificationCallback {
      // new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
   //   new SignUpForm2(theme).show();
  // new TestClass(theme).show();
- new AccountSettingForm(theme).show();
+ //new AccountSettingForm(theme).show();
+// new DiscussionForm(UIManager.initFirstTheme("/message")).showSbaitso();
+//new InboxForm(UIManager.initFirstTheme("/theme_pheonix")).show();
+new SendMessageForm(theme).show();
     }
 public void capture(){
+    
     Toolbar.setGlobalToolbar(true);
 Form hi = new Form("Rounder", new BorderLayout());
 Label picture = new Label("", "Container");
@@ -407,6 +412,7 @@ hi.show();
                 n.setAlertTitle("dd");
                 n.setId("dd");
                 n.setBadgeNumber(1);
+AutoCompleteTextField ac = new AutoCompleteTextField();
 
                 int repeatType = LocalNotification.REPEAT_NONE;
                  Display.getInstance().scheduleLocalNotification(n, System.currentTimeMillis() + 10 * 1000, repeatType);
