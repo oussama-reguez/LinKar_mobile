@@ -361,7 +361,8 @@ public class MyApplication implements LocalNotificationCallback {
       // showSplashScreen();
      // new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
   //   new SignUpForm2(theme).show();
-  new TestClass(theme).show();
+ // new TestClass(theme).show();
+ new AccountSettingForm(theme).show();
     }
 public void capture(){
     Toolbar.setGlobalToolbar(true);
