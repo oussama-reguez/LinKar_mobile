@@ -26,6 +26,7 @@ import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.GridLayout;
+import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
 import com.linkar.entities.Membre;
 import static com.linkar.main.MyApplication.LOGIN_URL;
@@ -164,9 +165,10 @@ public class SplashScreen extends Form {
          connectedMember.setFirst_name("sou");
          connectedMember.setLast_name("regez");
          connectedMember.setEmail("oussamareguez@gmail.com");
-         connectedMember.setPassword("oussamaa");
+         connectedMember.setPassword("oussama");
          connectedMember.setUsername("oussama");
          connectedMember.setUrl_picture("ddd");
+         
      }
     public void test2(){
         /*
@@ -178,8 +180,11 @@ SqlLite.insertMember(connectedMember);
  Membre m =SqlLite.getMember();
         System.err.println("");
 */
-         initMember();
-        SqlLite.UpdateMember(connectedMember);
+        // initMember();
+     
+       // SqlLite.dropDataBase();
+       // SqlLite.UpdateMember(connectedMember);
+    
     
     }
     public void handleLoginProcess(){
@@ -193,14 +198,18 @@ SqlLite.insertMember(connectedMember);
                 //verify local password 
               connectedMember=SqlLite.getMember();
                 System.err.println("");
-              if(!verifyPassword(connectedMember)){
-                  //signin form
+                if(connectedMember!=null){
+                     if(verifyPassword(connectedMember)){
+                  
                     System.err.println("");
+                     new MainForm(UIManager.initFirstTheme("/theme_material")).show();
+                     return;
+                   
               }
-              else{
-                  // show main app
-                    System.err.println("");
-              }
+           
+                }
+                new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
+             
                 
             }else{
 //user is logged in with facebook                 

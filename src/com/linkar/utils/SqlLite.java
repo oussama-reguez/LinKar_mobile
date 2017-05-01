@@ -16,6 +16,7 @@ import java.io.IOException;
 
 
 
+
 /**
  *
  * @author Oussama Reguez
@@ -25,6 +26,13 @@ public class SqlLite {
      public static Database db;
     public static void createDb(){
         
+    }
+    public static void dropDataBase(){
+         try {
+             Database.delete("membre");
+         } catch (IOException ex) {
+            
+         }
     }
     public static void initDb(){
          try {

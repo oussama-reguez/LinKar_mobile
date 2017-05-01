@@ -6,6 +6,8 @@
 package com.linkar.main;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.NetworkManager;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
@@ -32,6 +34,9 @@ import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
 import com.linkar.entities.Membre;
 import com.linkar.entities.Message;
+import static com.linkar.main.ListMemberForm.LIST_MEMBERS_URL;
+import static com.linkar.main.MyApplication.connectedMember;
+import com.linkar.utils.Json;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,13 +51,15 @@ public class DiscussionForm  extends Form{
     public DiscussionForm(Resources theme ){
         this.theme=theme;
        userPicture = theme.getImage("duke_iphone.png");;
-        
+       MyApplication.initMember();
+        initComponents();
     }
     List<Message>messages ;
-    Membre connected ;
+   
    Container discussion;
+   public static final String CONVERSATION_URL="http://localhost/linkar_web/web/app_dev.php/rest/conversation";
     void initMessages(){
-       connected = new Membre();
+      Membre connected = new Membre();
         connected.setId_member(14);
         connected.setFirst_name("oussama");
         connected.setLast_name("reguez");
@@ -73,6 +80,18 @@ public class DiscussionForm  extends Form{
          messages.add(m);
         
     }
+    List<Message>initMessages(int idSender,int idReceiver){
+         ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+           r.setUrl(CONVERSATION_URL);
+           r.addArgument("idSender", String.valueOf(idSender));
+            r.addArgument("idReceiver", String.valueOf(idReceiver));
+           NetworkManager.getInstance().addToQueueAndWait(r);
+           String response = new String (r.getResponseData());
+          return  Json.jsonToListMessages(response);
+        
+       
+    }
     void initDiscussion (List<Message>messages){
          SpanLabel lastLabel=new SpanLabel("oops");
          discussion.removeAll();
@@ -82,7 +101,7 @@ public class DiscussionForm  extends Form{
         t.setX(0);
         t.setHeight(t.getPreferredH());
         lastLabel=t;
-        if(connected.getId_member()==m.getSender().getId_member()) {
+        if(connectedMember.getId_member()==m.getSender().getId_member()) {
             t.setY(Display.getInstance().getDisplayHeight());
             t.setTextUIID("BubbleUser");
             t.setIconPosition(BorderLayout.EAST);
@@ -121,29 +140,29 @@ public class DiscussionForm  extends Form{
         destination.animateLayoutAndWait(400);
         destination.scrollComponentToVisible(t);
     }
-  public  void showSbaitso() {
-        Form sb = new Form();
-        sb.setFormBottomPaddingEditingMode(true);
+  public  void initComponents() {
+       
+        setFormBottomPaddingEditingMode(true);
         Toolbar t = new Toolbar();
-        sb.setToolBar(t);
+        setToolBar(t);
         final TextField searchField = new TextField();
         searchField.setHint("Search For Answers...");
         t.setTitleComponent(searchField);
-        sb.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
         final TextField ask = new TextField();
         ask.setHint("Ask The Dr.");
         Container askContainer = new Container(new BorderLayout());
         askContainer.addComponent(BorderLayout.CENTER, ask);
         Button askButton = new Button("Ask");
         askContainer.addComponent(BorderLayout.EAST, askButton);        
-        sb.addComponent(BorderLayout.SOUTH, askContainer);
+        addComponent(BorderLayout.SOUTH, askContainer);
        discussion = new Container(new BoxLayout(BoxLayout.Y_AXIS));
-        sb.addComponent(BorderLayout.CENTER, discussion);
+        addComponent(BorderLayout.CENTER, discussion);
         discussion.setScrollableY(true);
-        initMessages();
+       messages= initMessages(12,14);
         initDiscussion( messages);
-        
-        sb.show();
+
+       /*
         new Thread() {
     public void run() {
          // readAndParseFile();
@@ -188,6 +207,7 @@ public class DiscussionForm  extends Form{
           }
     }
 }.start();
+       */
         int count = 0; 
         
         count =discussion.getComponentCount();
@@ -211,15 +231,27 @@ public class DiscussionForm  extends Form{
                 String t = ask.getText();
                 if(t.length() > 0) {
                     ask.setText("");
-                    say(discussion, "testing", true);
+                    say(discussion, ask.getText(), true);
+                    //send it to the server 
                     answer(t, discussion);
                 }
             }
         };
         ask.setDoneListener(askEvent);
         askButton.addActionListener(askEvent);
+        
     }
-    
+    public static final String  SEND_MESSAGE_URL="";
+  void sendMessage(String message,int idReceiver){
+       ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(SEND_MESSAGE_URL);
+            r.addArgument("receiver", String.valueOf(idReceiver));
+            r.addArgument("sender", String.valueOf(connectedMember.getId_member()));
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+            //  return Json.jsonToListMembers(response);
+  }
     
     void answer(String question, Container dest) {
        

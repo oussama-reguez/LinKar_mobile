@@ -140,7 +140,7 @@ public class Json {
    }
     if(birthDayData!=null){
                 try {
-                    String date=(String)dateData.get("birthDay");
+                    String date=(String)birthDayData.get("date");
                     startDate = df.parse(date);
                    m.setBirth(startDate);
        

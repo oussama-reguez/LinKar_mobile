@@ -81,7 +81,7 @@ public class MyApplication implements LocalNotificationCallback {
          System.err.println("");
          
      }
-     void initMember(){
+   public  static void initMember(){
          connectedMember = new Membre();
          connectedMember.setId_member(14);
          connectedMember.setFirst_name("sou");
@@ -364,10 +364,12 @@ public class MyApplication implements LocalNotificationCallback {
    //  new SignUpForm(theme).show();
 //new ProfilForm(theme).show();
  //new AccountSettingForm(theme).show();
-// new DiscussionForm(UIManager.initFirstTheme("/message")).showSbaitso();
-//new ListMemberForm(UIManager.initFirstTheme("/theme_pheonix")).show();
+ new DiscussionForm(UIManager.initFirstTheme("/theme")).show();
+//new ListMemberForm(UIManager.initNamedTheme("/theme","Theme1")).show();
 //new SendMessageForm(theme).show();
-new SplashScreen(theme).show();
+//new SplashScreen(theme).show();
+//new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
+//new MainForm(UIManager.initNamedTheme("/theme","Theme1")).show();
     }
 public void capture(){
     

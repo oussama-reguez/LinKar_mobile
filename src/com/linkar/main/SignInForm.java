@@ -2,7 +2,9 @@ package com.linkar.main;
 
 
 import com.codename1.ui.FontImage;
+import static com.linkar.main.MyApplication.connectedMember;
 import com.codename1.ui.util.Resources;
+import com.linkar.entities.Membre;
 
 /*
  * Copyright (c) 2016, Codename One
@@ -32,13 +34,12 @@ import com.codename1.ui.FontImage;
  */
 public class SignInForm extends com.codename1.ui.Form {
 
-    public SignInForm() {
-        this(com.codename1.ui.util.Resources.getGlobalResources());
-    }
+  
     
     
     
     public SignInForm(com.codename1.ui.util.Resources resourceObjectInstance) {
+   
         initGuiBuilderComponents(resourceObjectInstance);
         getTitleArea().setUIID("Container");
         getToolbar().setUIID("Container");
@@ -101,10 +102,18 @@ public class SignInForm extends com.codename1.ui.Form {
         gui_Component_Group_1.setName("Component_Group_1");
         gui_Component_Group_1.addComponent(gui_Text_Field_2);
         gui_Component_Group_1.addComponent(gui_Text_Field_1);
-        gui_Text_Field_2.setText("TextField");
-        gui_Text_Field_2.setName("Text_Field_2");
-        gui_Text_Field_1.setText("TextField");
-        gui_Text_Field_1.setName("Text_Field_1");
+        gui_Text_Field_1.setText("");
+        gui_Text_Field_1.setName("Text_Field_2");
+        
+        if(connectedMember!=null){ 
+     gui_Text_Field_2.setText(connectedMember.getUsername());
+        }
+        else{
+            gui_Text_Field_2.setText("");
+            gui_Text_Field_1.setFocusable(true);
+        }
+        
+        gui_Text_Field_2.setName("Text_Field_1");
         gui_Container_1.addComponent(gui_Button_2);
         gui_Container_1.addComponent(gui_Button_3);
         gui_Label_1.setUIID("CenterLabel");
