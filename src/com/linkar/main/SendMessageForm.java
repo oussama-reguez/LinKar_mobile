@@ -40,6 +40,8 @@ import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
 import com.linkar.entities.Membre;
 import com.linkar.entities.Message;
+import static com.linkar.main.DiscussionForm.SEND_MESSAGE_URL;
+import static com.linkar.main.MyApplication.connectedMember;
 import com.linkar.utils.Json;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -52,6 +54,7 @@ import java.util.List;
  */
 
 public class SendMessageForm extends Form {
+   Form backForm;
 public final String AUTO_COMPLETE_URL="http://localhost/linkar_web/web/app_dev.php/rest/autoComplete";
     final DefaultListModel<String> options = new DefaultListModel<>();
     HashMap<String,Integer>autoCompletes=new HashMap<>();
@@ -66,7 +69,8 @@ public final String AUTO_COMPLETE_URL="http://localhost/linkar_web/web/app_dev.p
             
         }
     }
-    public SendMessageForm (Resources theme){
+    public SendMessageForm (Resources theme,Form backForm){
+        this.backForm=backForm;
         setLayout(new BorderLayout());
        
   AutoCompleteTextField ac = new AutoCompleteTextField(options) {
@@ -92,11 +96,8 @@ public final String AUTO_COMPLETE_URL="http://localhost/linkar_web/web/app_dev.p
   
   Button send = new Button("send");
   Container buttonContainer = FlowLayout.encloseCenter(send);
-  send.addActionListener((evt) -> {
-      int id = autoCompletes.get(ac.getText());
-      System.err.println("");
-  });
- TextArea lbl = new TextArea("", 1000, 100);
+ 
+ TextArea lbl = new TextArea("", 10, 100);
  
 lbl.setEditable(true);
 
@@ -107,7 +108,15 @@ lbl.setUIID("Label");
           add(NORTH,textFieldContainer);
           add(BorderLayout.CENTER,messageContainer);
    add(SOUTH, buttonContainer);
+   
+     send.addActionListener((evt) -> {
+     int id = autoCompletes.get(ac.getText());
+   sendMessage(lbl.getText(),id);
+   System.err.println("");
+   backForm.showBack();
+  });
     }
+    
      private List<Membre> searchAction(String text) {
             try {
         if(text.length() > 0) {
@@ -126,4 +135,20 @@ lbl.setUIID("Label");
          
          
             }
+
+  void sendMessage(String message,int idReceiver){
+      
+       ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(SEND_MESSAGE_URL);
+            r.addArgument("receiver", String.valueOf(idReceiver));
+            int id=connectedMember.getId_member();
+            r.addArgument("sender", String.valueOf(connectedMember.getId_member()));
+             r.addArgument("message", message);
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+           
+          
+            // return Json.jsonToListMembers(response);
+  }
 }

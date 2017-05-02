@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 import java.util.Hashtable;
@@ -88,6 +89,8 @@ public class MyApplication implements LocalNotificationCallback {
          connectedMember.setLast_name("regez");
          connectedMember.setEmail("oussamareguez@gmail.com");
          connectedMember.setPassword("sdsdfs");
+         connectedMember.setGender("Homme");
+         connectedMember.setBirth(new Date());
      }
      void showInboxMembersForm(){  
          Form hi = new Form("Hi World", new BoxLayout(BoxLayout.Y_AXIS));
@@ -328,11 +331,7 @@ public class MyApplication implements LocalNotificationCallback {
       VerifyCinForm f = new VerifyCinForm(theme);
       f.getForm().show();
   }
-    void showChangePasswordForm(){
-        NewPasswordForm form = new NewPasswordForm(theme);
-        form.getForm().show();
-       
-    }
+  
     public void start() {
         if(current != null){
             current.show();
@@ -363,8 +362,9 @@ public class MyApplication implements LocalNotificationCallback {
      // new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
    //  new SignUpForm(theme).show();
 //new ProfilForm(theme).show();
- //new AccountSettingForm(theme).show();
- new DiscussionForm(UIManager.initFirstTheme("/theme")).show();
+//new AccountSettingForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+new EditInfoForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+ //new DiscussionForm(UIManager.initFirstTheme("/theme")).show();
 //new ListMemberForm(UIManager.initNamedTheme("/theme","Theme1")).show();
 //new SendMessageForm(theme).show();
 //new SplashScreen(theme).show();

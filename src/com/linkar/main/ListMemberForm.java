@@ -111,63 +111,7 @@ public class ListMemberForm extends Form {
         rb.uiid(true);
         fab.bindFabToContainer(getContentPane());
         fab.addActionListener(e -> {
-            fab.setUIID("FloatingActionButtonClose");
-            Image oldImage = fab.getIcon();
-            FontImage image = FontImage.createMaterial(FontImage.MATERIAL_CLOSE, "FloatingActionButton", 3.8f);
-            fab.setIcon(image);
-            Dialog popup = new Dialog();
-            popup.setDialogUIID("Container");
-            popup.setLayout(new LayeredLayout());
-            
-            Button c1 = new Button(resourceObjectInstance.getImage("contact-a.png"));
-            Button c2 = new Button(resourceObjectInstance.getImage("contact-b.png"));
-            Button c3 = new Button(resourceObjectInstance.getImage("contact-c.png"));
-            Button trans = new Button(" ");
-            trans.setUIID("Container");
-            c1.setUIID("Container");
-            c2.setUIID("Container");
-            c3.setUIID("Container");
-            Style c1s = c1.getAllStyles();
-            Style c2s = c2.getAllStyles();
-            Style c3s = c3.getAllStyles();
-            
-            c1s.setMarginUnit(Style.UNIT_TYPE_DIPS);
-            c2s.setMarginUnit(Style.UNIT_TYPE_DIPS);
-            c3s.setMarginUnit(Style.UNIT_TYPE_DIPS);
-
-            c1s.setMarginBottom(16);
-            c1s.setMarginLeft(12);
-            c1s.setMarginRight(3);
-
-            c2s.setMarginLeft(4);
-            c2s.setMarginTop(5);
-            c2s.setMarginBottom(10);
-            c3s.setMarginRight(14);
-            
-            c3s.setMarginTop(12);
-            c3s.setMarginRight(16);
-
-            popup.add(trans).
-                    add(FlowLayout.encloseIn(c1)).
-                    add(FlowLayout.encloseIn(c2)).
-                    add(FlowLayout.encloseIn(c3));
-            
-            ActionListener a = ee -> popup.dispose();
-            
-            trans.addActionListener(a);
-            c1.addActionListener(a);
-            c2.addActionListener(a);
-            c3.addActionListener(a);
-            
-            popup.setTransitionInAnimator(CommonTransitions.createEmpty());
-            popup.setTransitionOutAnimator(CommonTransitions.createEmpty());
-            popup.setDisposeWhenPointerOutOfBounds(true);
-            int t = ListMemberForm.this.getTintColor();
-            ListMemberForm.this.setTintColor(0);
-            popup.showPopupDialog(new Rectangle(ListMemberForm.this.getWidth() - 10, ListMemberForm.this.getHeight() - 10, 10, 10));
-            ListMemberForm.this.setTintColor(t);
-            fab.setUIID("FloatingActionButton");
-            fab.setIcon(oldImage);
+           new SendMessageForm(UIManager.initNamedTheme("/theme","Theme"),this).show();
         });
     }
 

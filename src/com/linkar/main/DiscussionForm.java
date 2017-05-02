@@ -51,7 +51,7 @@ public class DiscussionForm  extends Form{
     public DiscussionForm(Resources theme ){
         this.theme=theme;
        userPicture = theme.getImage("duke_iphone.png");;
-       MyApplication.initMember();
+      
         initComponents();
     }
     List<Message>messages ;
@@ -92,9 +92,10 @@ public class DiscussionForm  extends Form{
         
        
     }
+    Thread updater;
     void initDiscussion (List<Message>messages){
          SpanLabel lastLabel=new SpanLabel("oops");
-         discussion.removeAll();
+        // discussion.removeAll();
         for(Message m : messages){
              SpanLabel t = new SpanLabel(m.getText());
         t.setWidth(discussion.getWidth());
@@ -119,7 +120,9 @@ public class DiscussionForm  extends Form{
         // destination.animateLayoutAndWait(400);
       
     }
+    boolean stopThread=false;
     void say(Container destination, String text, boolean question) {
+      
         SpanLabel t = new SpanLabel(text);
         t.setWidth(destination.getWidth());
         t.setX(0);
@@ -139,6 +142,46 @@ public class DiscussionForm  extends Form{
         destination.addComponent(t);
         destination.animateLayoutAndWait(400);
         destination.scrollComponentToVisible(t);
+    }
+    void initThread(){
+        
+       updater=  new Thread() {
+    public void run() {
+         // readAndParseFile();
+          while(true&&!stopThread){
+              try {
+                  Thread.sleep(5000);
+                  System.err.println("updating");
+                 Display.getInstance().callSerially(new Runnable() {
+               public void run() {
+                  List<Message> tmpMessages=initMessages(12, connectedMember.getId_member());
+                  int index1=tmpMessages.size();
+                  int index2=messages.size();
+                  if(index1>index2){
+                    
+                      List<Message>dd=tmpMessages.subList(index2,index1);
+                    
+                   initDiscussion(tmpMessages.subList(index2,index1));
+                       int  count =discussion.getComponentCount();
+                    messages=tmpMessages;
+                   discussion.animateLayoutAndWait(400);
+        discussion.scrollComponentToVisible(discussion.getComponentAt(count-1));
+               }
+                   
+              
+                 
+//say(discussion, "sdfsdfsfs", true);
+                   //  updateUIWithContentOfFile();
+                 
+               }
+          });
+              } catch (Exception e) {
+              }
+              
+          }
+    }
+};
+       
     }
   public  void initComponents() {
        
@@ -162,57 +205,14 @@ public class DiscussionForm  extends Form{
        messages= initMessages(12,14);
         initDiscussion( messages);
 
-       /*
-        new Thread() {
-    public void run() {
-         // readAndParseFile();
-          while(true){
-              try {
-                  Thread.sleep(5000);
-                 Message m = new Message();
-        m.setText("hello");
-        Membre sender = new Membre();
-        sender.setId_member(2);
-        sender.setFirst_name("dali");
-        sender.setLast_name("reguez");
-          m.setSender(sender);
-          m.setReceiver(connected);
-          messages = new ArrayList<Message>();
-          messages.add(m);
-          messages.add(m);
-          messages.add(m);
-          messages.add(m);
-          messages.add(m);messages.add(m);
-          messages.add(m);messages.add(m);messages.add(m);messages.add(m);messages.add(m);
-          messages.add(m);messages.add(m);messages.add(m);messages.add(m);messages.add(m);
-          messages.add(m);messages.add(m);messages.add(m);messages.add(m);messages.add(m);
-          
-                  
-                 Display.getInstance().callSerially(new Runnable() {
-               public void run() {
-                   initDiscussion(messages);
-                  int  count =discussion.getComponentCount();
        
-        
-         discussion.revalidate();
-            discussion.scrollComponentToVisible(discussion.getComponentAt(count-1));
-//say(discussion, "sdfsdfsfs", true);
-                   //  updateUIWithContentOfFile();
-                 
-               }
-          });
-              } catch (Exception e) {
-              }
-              
-          }
-    }
-}.start();
-       */
         int count = 0; 
         
         count =discussion.getComponentCount();
        
           discussion.scrollComponentToVisible(discussion.getComponentAt(count-1));
+          initThread();
+          updater.start();
         /*
         Display.getInstance().callSerially(new Runnable() {
             public void run() {
@@ -238,19 +238,32 @@ public class DiscussionForm  extends Form{
             }
         };
         ask.setDoneListener(askEvent);
-        askButton.addActionListener(askEvent);
+     //   askButton.addActionListener(askEvent);
+     askButton.addActionListener((evt) -> {
+         String text=ask.getText();
+         sendMessage(text, 12);
+         say(discussion, text, true);
+         System.err.println("");
+     });
         
     }
-    public static final String  SEND_MESSAGE_URL="";
+    public static final String  SEND_MESSAGE_URL="http://localhost/linkar_web/web/app_dev.php/rest/sendMessage";
   void sendMessage(String message,int idReceiver){
+       stopThread=true;
        ConnectionRequest r = new ConnectionRequest();
             r.setPost(false);
             r.setUrl(SEND_MESSAGE_URL);
             r.addArgument("receiver", String.valueOf(idReceiver));
             r.addArgument("sender", String.valueOf(connectedMember.getId_member()));
+             r.addArgument("message", message);
             NetworkManager.getInstance().addToQueueAndWait(r);
             String response = new String (r.getResponseData());
-            //  return Json.jsonToListMembers(response);
+            stopThread=false;
+            Message m = new Message();
+            m.setText(message);
+            m.setSender(connectedMember);
+            messages.add(m);
+            // return Json.jsonToListMembers(response);
   }
     
     void answer(String question, Container dest) {

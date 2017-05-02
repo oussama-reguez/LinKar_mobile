@@ -9,11 +9,13 @@ import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
+import com.codename1.ui.SideMenuBar;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
@@ -28,8 +30,32 @@ import com.codename1.ui.util.Resources;
  */
 public class AccountSettingForm extends Form {
       Tabs tabs;
+            public void setupSideMenu(Resources res) {
+                 getToolbar().addCommandToLeftBar(" ", null, e -> {});
+                 getToolbar().addCommandToLeftBar(" ",res.getImage("menu.png"),(evt) -> {
+           ((SideMenuBar)getToolbar().getMenuBar()).openMenu(null);
+        });
+        getToolbar().addCommandToRightBar("", null, e -> {});
+           
+        Image profilePic = res.getImage("user-picture.jpg");
+        Image mask = res.getImage("round-mask.png");
+        mask = mask.scaledHeight(mask.getHeight() / 4 * 3);
+        profilePic = profilePic.fill(mask.getWidth(), mask.getHeight());
+        Label profilePicLabel = new Label("  Jennifer Wilson", profilePic, "SideMenuTitle");
+        profilePicLabel.setMask(mask.createMask());
+
+        Container sidemenuTop = BorderLayout.center(profilePicLabel);
+        sidemenuTop.setUIID("SidemenuTop");
+        getToolbar().addComponentToSideMenu(sidemenuTop);
+        getToolbar().addMaterialCommandToSideMenu("  Dashboard", FontImage.MATERIAL_DASHBOARD,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Activity", FontImage.MATERIAL_TRENDING_UP,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Tasks", FontImage.MATERIAL_ACCESS_TIME,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Account Settings", FontImage.MATERIAL_SETTINGS,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Logout", FontImage.MATERIAL_EXIT_TO_APP,  e -> System.err.println(""));
+    }
     public AccountSettingForm(Resources theme){
         setLayout(new BoxLayout(com.codename1.ui.layouts.BoxLayout.Y_AXIS));
+        setupSideMenu(theme);
           Image img = theme.getImage("account-background.png");
           
         if(img.getHeight() > Display.getInstance().getDisplayHeight() / 3) {
@@ -38,7 +64,7 @@ public class AccountSettingForm extends Form {
         ScaleImageLabel sl = new ScaleImageLabel(img);
         
         sl.setUIID("profilBackground");
-        sl.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED);
+        sl.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
         
         //////////////////profile image///////////////////////////////////
         Image profilePic = theme.getImage("user-picture.jpg");
@@ -55,12 +81,17 @@ public class AccountSettingForm extends Form {
       //   profilePicLabel.getStyle().setMargin(TOP, 10);
          Label name = new Label("oussama reguez");
          Container imageHolder = BoxLayout.encloseY(name);
-         add(LayeredLayout.encloseIn(
+         Container profileHeader=LayeredLayout.encloseIn(
                 sl,
                 BorderLayout.center(
                    imageHolder
                 )
-        ));
+        );
+          profileHeader.setUIID("profileHeader");
+         profileHeader.getStyle().setMargin(0,0,0,0);
+         profileHeader.getStyle().setPadding(0,0,0,0);
+        
+         add(profileHeader);
          
          //menu 
          ButtonGroup barGroup = new ButtonGroup();
@@ -101,12 +132,15 @@ public class AccountSettingForm extends Form {
         
        Container grid1= new Container(new GridLayout(2,1));
        Label named = new Label("nom:");
+       named.setUIID("");
        Label l2 = new Label("reguez");
        
        Label prenom = new Label("prenom:");
+       prenom.setUIID("");
        Label pr = new Label("oussama");
        
        Label email = new Label("email:");
+       email.setUIID("");
        Label emailValue = new Label("oussamareguez@gmail.com");
        
       
