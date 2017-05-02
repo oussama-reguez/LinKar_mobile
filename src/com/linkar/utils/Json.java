@@ -40,9 +40,15 @@ public class Json {
         try {
             data = jsonParser.parseJSON(r);
              m = new Membre();
-             m.setFirst_name((String) data.get("firstName"));
-             m.setLast_name((String) data.get("lastName"));
-             m.setEmail( (String) data.get("email"));
+            int idSender = ((Double) data.get("id")).intValue();
+                    m.setId_member(idSender);
+                    m.setFirst_name((String) data.get("firstName"));
+                    m.setLast_name((String) data.get("lastName"));
+                    m.setUrl_picture((String) data.get("urlPicture"));
+                   m.setUrl_cin((String) data.get("urlCin"));
+                   m.setEmail((String) data.get("email"));
+                   m.setPassword((String) data.get("password"));
+                   m.setVerif_cin( Boolean.parseBoolean((String)data.get("verifCin")));
            
             
      
@@ -122,8 +128,10 @@ public class Json {
                     m.setFirst_name((String) list.get("firstName"));
                     m.setLast_name((String) list.get("lastName"));
                     m.setUrl_picture((String) list.get("urlPicture"));
+                   m.setUrl_cin((String) list.get("urlCin"));
                    m.setEmail((String) list.get("email"));
                    m.setPassword((String) list.get("password"));
+                   m.setVerif_cin( Boolean.parseBoolean((String)list.get("verifCin")));
                     LinkedHashMap<String,Object>  dateData= (LinkedHashMap<String,Object> ) list.get("lastDate");
             LinkedHashMap<String,Object>  birthDayData= (LinkedHashMap<String,Object> ) list.get("lastDate");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 

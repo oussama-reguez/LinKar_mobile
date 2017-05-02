@@ -24,6 +24,8 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
+import com.linkar.entities.Membre;
+import static com.linkar.main.MyApplication.connectedMember;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -31,8 +33,8 @@ import java.io.InputStream;
  *
  * @author Oussama Reguez
  */
-public class VerifyCinForm {
-    private Form f ;
+public class VerifyCinForm extends Form {
+   Resources theme;
     public static final String CIN_URL="http://localhost/linkar_web/web/app_dev.php/rest/uploadPhoto?id=14";
         public void UploadPicture(InputStream image) {
     //String picture = "";
@@ -84,10 +86,11 @@ if (FileChooser.isAvailable()) {
     Display.getInstance().openGallery(callback, Display.GALLERY_IMAGE);
 }
  }
-    public VerifyCinForm(Resources theme){
+ void validateCin(){
+     if( connectedMember.getUrl_cin()==null){
         FlowLayout layout = new FlowLayout();
         layout.setAlign(Component.CENTER);
-        f = new Form("verification cin", layout);
+      setLayout(layout);
         Image cin = theme.getImage("id-card.png");
         ImageViewer v = new ImageViewer(cin);
         Label text = new Label("some text here");
@@ -99,10 +102,20 @@ if (FileChooser.isAvailable()) {
          Container mainContainer = BoxLayout.encloseY(v,text,upload);
         // mainContainer.setUIID("main");
          // Container lin = BoxLayout.encloseY(v);
-          f.add(mainContainer);
-          f.setScrollableY(true);
+         add(mainContainer);
+          setScrollableY(true);
+         return;
+     }
+     if(connectedMember.isVerif_cin()){
+         
+     }
+     else{
+         
+     }
+ }
+    public VerifyCinForm(Resources theme){
+        this.theme=theme;
+        validateCin();
     }
-    public Form getForm(){
-        return f;
-    }
+  
 }

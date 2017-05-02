@@ -90,6 +90,7 @@ public class MyApplication implements LocalNotificationCallback {
          connectedMember.setEmail("oussamareguez@gmail.com");
          connectedMember.setPassword("sdsdfs");
          connectedMember.setGender("Homme");
+         
          connectedMember.setBirth(new Date());
      }
      void showInboxMembersForm(){  
@@ -327,10 +328,7 @@ public class MyApplication implements LocalNotificationCallback {
       //  LoginForm l = new LoginForm(theme);
       //l.getForm().show();
     }
-  void showVerifyCinForm(){
-      VerifyCinForm f = new VerifyCinForm(theme);
-      f.getForm().show();
-  }
+ 
   
     public void start() {
         if(current != null){
@@ -363,7 +361,8 @@ public class MyApplication implements LocalNotificationCallback {
    //  new SignUpForm(theme).show();
 //new ProfilForm(theme).show();
 //new AccountSettingForm(UIManager.initNamedTheme("/theme","Theme1")).show();
-new EditInfoForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+//new EditInfoForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+new ChangePasswordForm(UIManager.initNamedTheme("/theme","Theme1")).show();
  //new DiscussionForm(UIManager.initFirstTheme("/theme")).show();
 //new ListMemberForm(UIManager.initNamedTheme("/theme","Theme1")).show();
 //new SendMessageForm(theme).show();

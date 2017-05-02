@@ -195,7 +195,7 @@ this.theme = theme;
         //  validateLogin(login.getText(),password.getText());
       VerifyCinForm f = new VerifyCinForm(theme);
       
-          signIn(f.getForm());
+      //    signIn(f.getForm());
       });
       return form;
     }
@@ -212,7 +212,7 @@ this.theme = theme;
         //  validateLogin(login.getText(),password.getText());
       VerifyCinForm f = new VerifyCinForm(theme);
       
-          signIn(f.getForm());
+        //  signIn(f.getForm());
       });
      form.show();
     }    
