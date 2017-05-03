@@ -5,6 +5,12 @@
  */
 package com.linkar.main;
 import com.codename1.components.ScaleImageLabel;
+import com.codename1.ext.filechooser.FileChooser;
+import com.codename1.io.FileSystemStorage;
+import com.codename1.io.Log;
+import com.codename1.io.MultipartRequest;
+import com.codename1.io.NetworkManager;
+import com.codename1.io.Util;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Container;
@@ -17,6 +23,7 @@ import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.SideMenuBar;
 import com.codename1.ui.Tabs;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
@@ -24,6 +31,8 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import java.io.IOException;
+import java.io.InputStream;
 /**
  *
  * @author Oussama Reguez
@@ -72,6 +81,10 @@ public class AccountSettingForm extends Form {
         profilePic = profilePic.fill(mask.getWidth(), mask.getHeight());
         Label profilePicLabel = new Label(profilePic);
         Button btnProfil = new Button();
+        btnProfil.setIcon(theme.getImage("user-picture.jpg"));
+        btnProfil.addActionListener((evt) -> {
+            uploadUserPhoto();
+        });
        
        
         
@@ -80,7 +93,7 @@ public class AccountSettingForm extends Form {
         profilePicLabel.setMask(mask.createMask());
       //   profilePicLabel.getStyle().setMargin(TOP, 10);
          Label name = new Label("oussama reguez");
-         Container imageHolder = BoxLayout.encloseY(name);
+         Container imageHolder = BoxLayout.encloseY(name,btnProfil);
          Container profileHeader=LayeredLayout.encloseIn(
                 sl,
                 BorderLayout.center(
@@ -222,4 +235,57 @@ public class AccountSettingForm extends Form {
        
         
     }
+
+ public static final String PHOTO_URL="http://localhost/linkar_web/web/app_dev.php/rest/uploadPhoto";
+        public void UploadPicture(InputStream image) {
+    //String picture = "";
+       
+    
+      
+        MultipartRequest request = new MultipartRequest() {
+            private Object IOUtils;
+           protected void readResponse(InputStream inpute) throws IOException  {
+ byte[] b = Util.readInputStream(inpute);
+ String myString = new String(b);
+               System.err.println(myString);
+           }
+        };
+        request.setUrl(PHOTO_URL+"?id="+MyApplication.connectedMember.getId_member());
+        try {
+            
+          //  request.addData("upfile", picture, "image/jpeg");
+            request.addData("upfile", image,image.available(),"image/jpeg");
+            request.setFilename("upfile", "myPicture.jpg");
+            NetworkManager.getInstance().addToQueueAndWait(request);
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+    
+}
+ void uploadUserPhoto(){
+     
+     ActionListener callback = e->{
+   if (e != null && e.getSource() != null) {
+       String filePath = (String)e.getSource();
+       FileSystemStorage fs = FileSystemStorage.getInstance();
+               try {
+                   InputStream fis = fs.openInputStream(filePath);
+                   UploadPicture(fis);
+                   String k = null;
+                //   hi.addComponent(new SpanLabel(Util.readToString(fis)));
+               } catch (Exception ex) {
+                   Log.e(ex);
+               }
+
+      System.out.println("done");
+   }
+};
+
+if (FileChooser.isAvailable()) {
+    FileChooser.showOpenDialog("image/gif,.png,image/png,.jpg,image/jpg,.tif,image/tif,.jpeg", callback);
+} else {
+    Display.getInstance().openGallery(callback, Display.GALLERY_IMAGE);
+}
+ }
+
 }

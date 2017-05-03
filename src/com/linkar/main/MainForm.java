@@ -64,8 +64,8 @@ public class MainForm extends Form {
         getToolbar().addComponentToSideMenu(sidemenuTop);
         getToolbar().addMaterialCommandToSideMenu("  Dashboard", FontImage.MATERIAL_DASHBOARD,  e -> System.err.println(""));
         getToolbar().addMaterialCommandToSideMenu("  Activity", FontImage.MATERIAL_TRENDING_UP,  e -> System.err.println(""));
-        getToolbar().addMaterialCommandToSideMenu("  Tasks", FontImage.MATERIAL_ACCESS_TIME,  e -> System.err.println(""));
-        getToolbar().addMaterialCommandToSideMenu("  Account Settings", FontImage.MATERIAL_SETTINGS,  e -> System.err.println(""));
-        getToolbar().addMaterialCommandToSideMenu("  Logout", FontImage.MATERIAL_EXIT_TO_APP,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Message", FontImage.MATERIAL_ACCESS_TIME,  e -> new ListMemberForm(res,this).show());
+        getToolbar().addMaterialCommandToSideMenu("  Parametre du compte", FontImage.MATERIAL_SETTINGS,  e -> System.err.println(""));
+        getToolbar().addMaterialCommandToSideMenu("  Se deconnecter", FontImage.MATERIAL_EXIT_TO_APP,  e -> System.err.println(""));
     }
 }

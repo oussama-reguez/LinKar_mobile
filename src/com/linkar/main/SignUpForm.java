@@ -5,8 +5,13 @@
  */
 package com.linkar.main;
 
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.NetworkManager;
+import com.codename1.l10n.Format;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.Tabs;
@@ -15,7 +20,12 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
+import com.codename1.ui.spinner.Picker;
 import com.codename1.ui.util.Resources;
+import com.linkar.entities.Membre;
+import static com.linkar.main.DiscussionForm.SEND_MESSAGE_URL;
+import static com.linkar.main.EditInfoForm.EDIT_USER_URL;
+import static com.linkar.main.MyApplication.connectedMember;
 
 /**
  *
@@ -82,6 +92,12 @@ public class SignUpForm extends Form{
            email.setHint("email");
            email.getHintLabel().setUIID("signUpHint");                
          Button register = new Button("register");
+         register.addActionListener((evt) -> {
+             m.setUsername(username.getText());
+             m.setPassword(password.getText());
+             m.setEmail(email.getText());
+             tabs.setSelectedIndex(1, true);
+         });
          register.setUIID("btnRegister");
        //  userNamecontainer.add(username);
         // passwordContainer.add(password);
@@ -106,6 +122,7 @@ public class SignUpForm extends Form{
              tab1.addComponent(com.codename1.ui.layouts.BorderLayout.SOUTH, south);
            return tab1;
        }
+         Membre m = new Membre();
     Container generateTab2(){
           Container north  = new Container(new FlowLayout(CENTER));
       Container center  = new Container(new FlowLayout(CENTER));
@@ -167,12 +184,33 @@ public class SignUpForm extends Form{
          
          lastName.setUIID("signUpField");
           lastName.getHintLabel().setUIID("signUpHint");
-          TextField birthDay = new TextField();
-          birthDay.setUIID("signUpField");
-           birthDay.setHint("Birthday");
-           birthDay.getHintLabel().setUIID("signUpHint");                
+        
+         Picker    birthDay = new Picker();
+       birthDay.setUIID("signUpField");
+     
+       
+       birthDay.setDate(connectedMember.getBirth());
+       
+birthDay.setType(Display.PICKER_TYPE_DATE);            
          Button register = new Button("register");
          register.setUIID("btnRegister");
+         
+         register.addActionListener((evt) -> {
+             m.setFirst_name(firstName.getText());
+             if(this.male){
+                 m.setGender("Homme");
+             }
+             else{
+                 m.setGender("Femme");
+             }
+             m.setLast_name(lastName.getText());
+             m.setBirth(birthDay.getDate());
+             
+             addUserToDb(m);
+             
+             
+         });
+         
        //  userNamecontainer.add(username);
         // passwordContainer.add(password);
         // emailContainer.add(email);
@@ -192,18 +230,19 @@ public class SignUpForm extends Form{
            signIn.setUIID("signUpFooter");
            Label btnSign = new Label("sign in");
            btnSign.setUIID("signUpSignIn");
+           
            southHolder.add(signIn);
            southHolder.add(btnSign);
            south.add(southHolder);
            tab. addComponent(com.codename1.ui.layouts.BorderLayout.SOUTH, south);
         return tab;
     }
-       
+        Tabs tabs = new Tabs();
        public SignUpForm(Resources theme){
         this.theme=theme;
         setUIID("signUpForm");
          setLayout(BoxLayout.y());
-          Tabs tabs = new Tabs();
+         
           tabs.setUIID("");
         
              
@@ -213,6 +252,26 @@ public class SignUpForm extends Form{
     }
     void initComponents(){
         
+    }
+    public static final String SIGN_UP_URL="http://localhost/linkar_web/web/app_dev.php/rest/signUp";
+    void addUserToDb(Membre m){
+         ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(SIGN_UP_URL);
+            r.addArgument("username", m.getUsername());
+              r.addArgument("firstName", m.getFirst_name());
+               r.addArgument("lastName", m.getLast_name());
+                 r.addArgument("password", m.getPassword());
+                r.addArgument("email", m.getEmail());
+                Format formatter = new SimpleDateFormat("d/m/y");
+String s = formatter.format(m.getBirth());
+               //    r.addArgument("birth", s);
+                   r.addArgument("gender", m.getGender());
+                 //  r.addArgument("adresse", m.getAddress());
+         
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+            System.err.println("");
     }
     
 }

@@ -90,7 +90,8 @@ public class MyApplication implements LocalNotificationCallback {
          connectedMember.setEmail("oussamareguez@gmail.com");
          connectedMember.setPassword("sdsdfs");
          connectedMember.setGender("Homme");
-         
+         connectedMember.setUrl_cin("sdfsf");
+         connectedMember.setVerif_cin(false);
          connectedMember.setBirth(new Date());
      }
      void showInboxMembersForm(){  
@@ -329,7 +330,7 @@ public class MyApplication implements LocalNotificationCallback {
       //l.getForm().show();
     }
  
-  
+
     public void start() {
         if(current != null){
             current.show();
@@ -358,11 +359,14 @@ public class MyApplication implements LocalNotificationCallback {
  // testDataBase();
       // showSplashScreen();
      // new SignInForm(UIManager.initFirstTheme("/theme_pheonix")).show();
-   //  new SignUpForm(theme).show();
-//new ProfilForm(theme).show();
+   // new SignUpForm(UIManager.initNamedTheme("/theme","Theme")).show();
+//new ProfilForm(UIManager.initNamedTheme("/theme","Theme1"),1).show();
 //new AccountSettingForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+LoginForm l = new LoginForm(theme);
+l.getForm().show();
 //new EditInfoForm(UIManager.initNamedTheme("/theme","Theme1")).show();
-new ChangePasswordForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+//new ChangePasswordForm(UIManager.initNamedTheme("/theme","Theme1")).show();
+//new VerifyCinForm(UIManager.initNamedTheme("/theme","Theme1")).show();
  //new DiscussionForm(UIManager.initFirstTheme("/theme")).show();
 //new ListMemberForm(UIManager.initNamedTheme("/theme","Theme1")).show();
 //new SendMessageForm(theme).show();

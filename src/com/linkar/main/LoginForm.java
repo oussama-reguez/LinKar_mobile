@@ -8,6 +8,7 @@ package com.linkar.main;
 import com.codename1.components.ImageViewer;
 import com.codename1.db.Database;
 import com.codename1.facebook.FaceBookAccess;
+import com.codename1.facebook.User;
 import com.codename1.io.AccessToken;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.NetworkEvent;
@@ -22,8 +23,11 @@ import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.util.Resources;
 import com.codename1.ui.util.UIBuilder;
 import com.linkar.entities.Membre;
+import static com.linkar.main.DiscussionForm.SEND_MESSAGE_URL;
 import static com.linkar.main.MyApplication.LOGIN_URL;
+import static com.linkar.main.MyApplication.connectedMember;
 import com.linkar.utils.Json;
+import com.linkar.utils.SqlLite;
 import java.io.IOException;
 
 /**
@@ -37,13 +41,19 @@ public class LoginForm {
     private Membre connectedMember =null;
     private Resources theme;
    
-    private static void signIn(final Form main) {
+    private  void signInWithFB(final Form main) {
+        /*
          FaceBookAccess.setClientId("428671887491341");
         FaceBookAccess.setClientSecret("29f3fd42e1050079087e92657920cf23");
         FaceBookAccess.setRedirectURI("http://localhost/linkar/web/app_dev.php/");
        FaceBookAccess.setPermissions(new String[]{"user_location", "user_photos", "friends_photos", "publish_stream", "read_stream", "user_relationships", "user_birthday",
                     "friends_birthday", "friends_relationships", "read_mailbox", "user_events", "friends_events", "user_about_me"});
-       
+       */
+        FaceBookAccess.setClientId("132970916828080");
+        FaceBookAccess.setClientSecret("6aaf4c8ea791f08ea15735eb647becfe");
+        FaceBookAccess.setRedirectURI("http://www.codenameone.com/");
+        FaceBookAccess.setPermissions(new String[]{"user_location", "user_photos", "friends_photos", "publish_stream", "read_stream", "user_relationships", "user_birthday",
+                    "friends_birthday", "friends_relationships", "read_mailbox", "user_events", "friends_events", "user_about_me"});
        
         FaceBookAccess.getInstance().showAuthentication(new ActionListener() {
             
@@ -58,6 +68,8 @@ public class LoginForm {
                     //store token for future queries.
                     Storage.getInstance().writeObject("token", token);
                     if (main != null) {
+                     User fb= getFacebookUser();
+                        
                         main.show();
                     }
                     else{
@@ -138,32 +150,45 @@ public class LoginForm {
             });
         }
     }
-    public void validateLoginFromDb(String login ,String password){
-        ConnectionRequest con = new ConnectionRequest();
-            con.setUrl(LOGIN_URL+"?username="+login+"&password="+password);
-            con.addResponseListener(new ActionListener<NetworkEvent>() {
+   
+       User getFacebookUser(){
+        User  me;
+         try {
+             me = FaceBookAccess.getInstance().getUser(null);
+         } catch (IOException ex) {
+           return null;
+         }
+       //convert it to Member object 
+                    System.err.println("");
+                return me;
+    }
+    public Membre userToMembre(User f){
+        Membre m = new Membre();
+        
+       m.setFacebookId(f.getId());
+        m.setFirst_name(f.getFirst_name());
+        m.setLast_name(f.getLast_name());
+        m.setGender(f.getGender());
+        m.setEmail(f.getEmail());
+        return m;
+    }
+    Membre getMemberFromDb(String username,String password){
+      
+       ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(LOGIN_URL);
+            r.addArgument("username", username);
+              r.addArgument("password", password);
+            
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+           
+          if(response.equals("error")){
+              return null;
+          }
+            return Json.jsonToMember(response);
+  }
 
-                @Override
-                public void actionPerformed(NetworkEvent evt) {
-               String response = new String (con.getResponseData());
-               if(response.equals("error")){
-                     Dialog.show("Autentication", "Username or password incorect", "OK", "Cancel");
-               }
-               else{
-                   connectedMember =Json.jsonToMember(response);
-                  
-                     Dialog.show("Autentication", connectedMember.getFirst_name(), "OK", "Cancel");
-               }
-               
-            //  spanLabel.setText(response);
-              // f.refreshTheme();
-               
-                }
-            });
-            
-            
-            NetworkManager.getInstance().addToQueue(con);
-   }
     public LoginForm(Resources theme){
 this.theme = theme;
 //   validateFbLogin()
@@ -181,8 +206,23 @@ this.theme = theme;
         
     }
 
-  
-    
+   Membre getMemberWithFb(String facebookId){
+      
+       ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(FACEBOOK_SIGNIN_URL);
+            r.addArgument("idFacebook", facebookId);
+            
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+           
+          if(response.equals("error")){
+              return null;
+          }
+            return Json.jsonToMember(response);
+  }
+    public static final String FACEBOOK_SIGNIN_URL="http://localhost/linkar_web/web/app_dev.php/rest/fbSignIn";
+     public static final String FACEBOOK_SIGNUP_URL="http://localhost/linkar_web/web/app_dev.php/rest/fbSignUp";
     private Form generateLoginForm(Resources theme){
        UIBuilder ui = new UIBuilder();
          UIBuilder.registerCustomComponent("ImageViewer", ImageViewer.class);
@@ -193,9 +233,25 @@ this.theme = theme;
       Button btnLogin   = (Button) ui.findByName("btnLogin",form);
       btnLogin.addActionListener((evt) -> {
         //  validateLogin(login.getText(),password.getText());
-      VerifyCinForm f = new VerifyCinForm(theme);
+     
+    //  Membre k = getMemberWithFb("777");
+       connectedMember =getMemberFromDb("dada", "oussama");
+       connectedMember.setUsername("dada");
+       connectedMember.setPassword("oussamaa");
+       //store in db
       
-      //    signIn(f.getForm());
+        
+       if(connectedMember==null){
+          
+       }
+       else{
+            SqlLite.dropDataBase();
+       SqlLite.createTableMember();
+         SqlLite.insertMember(connectedMember);
+       Membre l=SqlLite.getMember();
+           new MainForm(theme).show();
+       }
+        // signInWithFB(this.getForm());
       });
       return form;
     }

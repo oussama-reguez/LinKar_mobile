@@ -20,6 +20,7 @@ import com.codename1.ui.Form;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.events.ActionListener;
+import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.UIManager;
@@ -35,7 +36,7 @@ import java.io.InputStream;
  */
 public class VerifyCinForm extends Form {
    Resources theme;
-    public static final String CIN_URL="http://localhost/linkar_web/web/app_dev.php/rest/uploadPhoto?id=14";
+    public static final String CIN_URL="http://localhost/linkar_web/web/app_dev.php/rest/uploadCin";
         public void UploadPicture(InputStream image) {
     //String picture = "";
        
@@ -88,9 +89,10 @@ if (FileChooser.isAvailable()) {
  }
  void validateCin(){
      if( connectedMember.getUrl_cin()==null){
-        FlowLayout layout = new FlowLayout();
-        layout.setAlign(Component.CENTER);
-      setLayout(layout);
+         
+        
+      setLayout(new BorderLayout());
+      
         Image cin = theme.getImage("id-card.png");
         ImageViewer v = new ImageViewer(cin);
         Label text = new Label("some text here");
@@ -100,17 +102,55 @@ if (FileChooser.isAvailable()) {
             uploadCin();
         });
          Container mainContainer = BoxLayout.encloseY(v,text,upload);
+         FlowLayout layout = new FlowLayout();
+        layout.setAlign(Component.CENTER);
+        layout.setValign(CENTER);
+        Container main = new Container(layout);
+        main.add(mainContainer);
         // mainContainer.setUIID("main");
          // Container lin = BoxLayout.encloseY(v);
-         add(mainContainer);
+      add(CENTER,main);
           setScrollableY(true);
          return;
      }
      if(connectedMember.isVerif_cin()){
-         
+            
+      setLayout(new BorderLayout());
+      
+        Image cin = theme.getImage("id-card.png");
+        ImageViewer v = new ImageViewer(cin);
+        Label text = new Label("votre cin est verifié");
+    
+       
+         Container mainContainer = BoxLayout.encloseY(v,text);
+         FlowLayout layout = new FlowLayout();
+        layout.setAlign(Component.CENTER);
+        layout.setValign(CENTER);
+        Container main = new Container(layout);
+        main.add(mainContainer);
+        // mainContainer.setUIID("main");
+         // Container lin = BoxLayout.encloseY(v);
+      add(CENTER,main);
+          setScrollableY(true);
      }
      else{
-         
+           setLayout(new BorderLayout());
+      
+        Image cin = theme.getImage("id-card.png");
+        ImageViewer v = new ImageViewer(cin);
+        Label text = new Label("l'administrateur n'a pas encore verifier votre compte");
+    
+       
+         Container mainContainer = BoxLayout.encloseY(v,text);
+         FlowLayout layout = new FlowLayout();
+        layout.setAlign(Component.CENTER);
+        layout.setValign(CENTER);
+        Container main = new Container(layout);
+        main.add(mainContainer);
+        // mainContainer.setUIID("main");
+         // Container lin = BoxLayout.encloseY(v);
+      add(CENTER,main);
+          setScrollableY(true);
      }
  }
     public VerifyCinForm(Resources theme){

@@ -6,6 +6,11 @@
 package com.linkar.main;
 
 import com.codename1.components.ScaleImageLabel;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.NetworkManager;
+import com.codename1.l10n.DateFormat;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
 import com.codename1.ui.Form;
@@ -18,13 +23,69 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import com.linkar.utils.Json;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 /**
  *
  * @author Oussama Reguez
  */
 public class ProfilForm extends Form {
-    public ProfilForm(Resources theme){
+    
+    String firsName;
+    String lastName;
+    String email;
+    String nbrAnnonce;
+    String nbrDemande;
+    String status;
+    String urlPicture;
+    Date createdTime;
+    
+    int idMember;
+    public static final String PROFIL_DATA_URL="http://localhost/linkar_web/web/app_dev.php/rest/profilData";
+    void initProfilData(int idMember){
+        Map<String,Object> data=getProfilData(idMember);
+        firsName=(String)data.get("firstName");
+   lastName=(String)data.get("lastName");
+    email=(String)data.get("email");
+   nbrAnnonce=(String)data.get("nbrAnnonce");
+   nbrDemande=(String)data.get("nbrDemande");
+    status=(String)data.get("statut");
+    urlPicture=(String)data.get("urlPicture");
+    LinkedHashMap<String,Object>  dateData= (LinkedHashMap<String,Object> ) data.get("createdTime");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    Date date=null;
+ 
+             
+                  
+        try {
+            date = df.parse((String)dateData.get("date"));
+        } catch (ParseException ex) {
+           
+        }
+        createdTime=date;
+  
+    }
+      Map<String,Object> getProfilData(int idMember){
+      
+       ConnectionRequest r = new ConnectionRequest();
+            r.setPost(false);
+            r.setUrl(PROFIL_DATA_URL);
+           
+            r.addArgument("id", String.valueOf(idMember));
+            
+            NetworkManager.getInstance().addToQueueAndWait(r);
+            String response = new String (r.getResponseData());
+           
+         
+            return Json.jsonToProfilData(response);
+  }
+    public ProfilForm(Resources theme,int idMember){
+        this.idMember=idMember;
+        initProfilData(idMember);
         /*
        Label l = new Label("check");
         Container ll=FlowLayout.encloseRight(l);
@@ -71,9 +132,9 @@ public class ProfilForm extends Form {
         
         //add full name + email
         Container mainContainer= new Container (new BoxLayout(com.codename1.ui.layouts.BoxLayout.Y_AXIS));
-        Label fullName= new Label("oussama reguez");
+        Label fullName= new Label(firsName+" "+lastName);
         fullName.setUIID("profilfullName");
-        Label email = new Label("oussamareguez@gmail.com");
+        Label email = new Label(this.email);
         fullName.getStyle().setPadding(0, 0, 0, 0);
          fullName.getStyle().setMargin(0, 0, 0, 0);
         email.setUIID("profilEmail");
@@ -103,10 +164,10 @@ public class ProfilForm extends Form {
         Container seven= new Container(new FlowLayout(CENTER));
         Container eight= new Container(new FlowLayout(CENTER));
         Container nine= new Container(new FlowLayout(CENTER));
-        one.add(new Label("membre depuis 2005"));
-        two.add(new Label("statut: blocké"));
-        three.add(new Label("annonces:50"));
-        four.add(new Label("demandes:10"));
+        one.add(new Label("membre depuis "));
+        two.add(new Label("statut: "+this.status));
+        three.add(new Label("annonces: "+nbrAnnonce));
+        four.add(new Label("demandes: "+nbrDemande));
         
 // membre depuis 
         // annonces: 50

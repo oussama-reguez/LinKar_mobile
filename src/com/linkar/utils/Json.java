@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,26 @@ import java.util.Map;
  * @author Oussama Reguez
  */
 public class Json {
+    
+        public static Map<String,Object> jsonToProfilData(String jsonData){
+
+        InputStream is = new ByteArrayInputStream(  jsonData.getBytes());
+        Reader r = new InputStreamReader(is);
+        JSONParser jsonParser = new JSONParser();
+         Map<String, Object> data;
+        try {
+            data = jsonParser.parseJSON(r);
+            
+           
+            
+     
+        } catch (IOException ex) {
+           return null;
+        }
+        
+        
+        return data;
+    }
     
         public static Membre jsonToMember(String jsonData){
          Membre m=null;
@@ -47,18 +68,28 @@ public class Json {
                     m.setUrl_picture((String) data.get("urlPicture"));
                    m.setUrl_cin((String) data.get("urlCin"));
                    m.setEmail((String) data.get("email"));
+                    m.setGender((String) data.get("gender"));
                    m.setPassword((String) data.get("password"));
                    m.setVerif_cin( Boolean.parseBoolean((String)data.get("verifCin")));
-           
-            
-     
-        } catch (IOException ex) {
-           return null;
-        }
-        
+                LinkedHashMap<String,Object>  dateData= (LinkedHashMap<String,Object> ) data.get("birthDay");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    Date startDate;
+ 
+          if(dateData!=null){
+                
+                    String date=(String)dateData.get("date");
+                    startDate = df.parse(date);
+                   m.setBirth(startDate);
+
+        } 
         
         return m;
     }
+        catch (Exception ex){
+            return null;
+        }
+        
+        }
         
         public static  List<Reclamation>  jsonToReclammations(String jsonData) {
             List<Reclamation> reclamations = new ArrayList<>();
@@ -121,6 +152,8 @@ public class Json {
         return membres;
         }
         
+         
+         
         public static Membre listToMember(LinkedHashMap<String,Object> list){
             Membre m = new Membre();
               int idSender = ((Double) list.get("id")).intValue();

@@ -38,6 +38,7 @@ import java.io.IOException;
 
 
 
+
 /**
  *
  * @author Oussama Reguez
@@ -150,6 +151,17 @@ public class SplashScreen extends Form {
             return null;
     }
     
+    User getFacebookUser(){
+        User  me;
+         try {
+             me = FaceBookAccess.getInstance().getUser(null);
+         } catch (IOException ex) {
+           return null;
+         }
+       //convert it to Member object 
+                    System.err.println("");
+                return me;
+    }
     public Membre userToMembre(User f){
         Membre m = new Membre();
         
